@@ -6,6 +6,7 @@ using System.IO;
 using BC = System.BitConverter;
 using static dbkg.MDLX.objectModelPartEntry;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace dbkg
 {
@@ -674,9 +675,9 @@ public static byte[] Data_ptr = new byte[0x1030];
                 if (data.Length < 0xA0) return;
 
                 int pos = 0x90;
-                if (BC.ToInt32(data, pos) == (int)MODEL_TYPE.MULTI)
+                if (BC.ToInt32(data, (pos+=4)-4) == (int)MODEL_TYPE.MULTI)
                 {
-                    pos += sizeof(int);
+                    pos += (~((pos-1) & 15) & 15);
                     List<int> offsets = new List<int>(0);
                     
                     while (pos + sizeof(int) < data.Length)
@@ -695,8 +696,10 @@ public static byte[] Data_ptr = new byte[0x1030];
                     for (int i=0; i<offsets.Count-1; i++)
                     {
                         KH2Model model = new KH2Model();
+                        this.Type = MODEL_TYPE.MULTI;
+                        model.TIM = this.TIM;
                         model.Index = i;
-                        model.ReadModel(ref data, offsets[i], offsets[i + 1] - offsets[i]);
+                        model.ReadModel(ref data, 0x90 + offsets[i], offsets[i + 1] - offsets[i]);
                         this.Models.Add(model);
                     }
                 }
@@ -778,6 +781,8 @@ public static byte[] Data_ptr = new byte[0x1030];
                        sourceChainDmaTag currTag = new sourceChainDmaTag(ref data, i, origin + entry.offDmaSrcChain);
                         if (currTag.command2.Command == VifCode.CMD.UNPACK)
                         {
+                            if (currTag.isSprAddr) /* Skip the readings from scratchpad */
+                                continue;
                             int addr =       (currTag.command2.imm & 0b0000001111111111) * 0x10;
                             bool usn =       (currTag.command2.imm & 0b0100000000000000) > 0;
                             bool flg =       (currTag.command2.imm & 0b1000000000000000) > 0;
