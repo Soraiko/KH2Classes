@@ -7,6 +7,13 @@ using BC = System.BitConverter;
 using static dbkg.MDLX.objectModelPartEntry;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Security.Policy;
+using System.Security.Cryptography;
+using Assimp;
+using static dbkg.MDLX.KH2Model;
+using System.Drawing.Imaging;
+using System.IO.Ports;
+using System.ComponentModel;
 
 namespace dbkg
 {
@@ -67,62 +74,62 @@ namespace dbkg
                 public Vector4 bbox_max     { get { fixed (byte* a = &data[offset+0x10]) return new Vector4((*(float*)(a + 0 * sizeof(float))), (*(float*)(a + 1 * sizeof(float))), (*(float*)(a + 2 * sizeof(float))), (*(float*)(a + 3 * sizeof(float)))); } set { fixed (byte* a = &data[offset+0x10]) { (*(float*)(a + 0 * sizeof(float))) = value.X; (*(float*)(a + 1 * sizeof(float))) = value.Y; (*(float*)(a + 2 * sizeof(float))) = value.Z; (*(float*)(a + 3 * sizeof(float))) = value.W; } }}
                 public Vector4 ik_bone_bias { get { fixed (byte* a = &data[offset+0x20]) return new Vector4((*(float*)(a + 0 * sizeof(float))), (*(float*)(a + 1 * sizeof(float))), (*(float*)(a + 2 * sizeof(float))), (*(float*)(a + 3 * sizeof(float)))); } set { fixed (byte* a = &data[offset+0x20]) { (*(float*)(a + 0 * sizeof(float))) = value.X; (*(float*)(a + 1 * sizeof(float))) = value.Y; (*(float*)(a + 2 * sizeof(float))) = value.Z; (*(float*)(a + 3 * sizeof(float))) = value.W; } }}
                                       
-                int PART_LF_HEAD        { get { fixed (byte* a = &data[offset+0x030]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x030])        (*(int*)a)=value; } }
-                int PART_RF_HEAD        { get { fixed (byte* a = &data[offset+0x034]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x034])        (*(int*)a)=value; } }
-                int PART_LB_HEAD        { get { fixed (byte* a = &data[offset+0x038]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x038])        (*(int*)a)=value; } }
-                int PART_RB_HEAD        { get { fixed (byte* a = &data[offset+0x03C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x03C])        (*(int*)a)=value; } }
-                int PART_LF_NECK        { get { fixed (byte* a = &data[offset+0x040]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x040])        (*(int*)a)=value; } }
-                int PART_RF_NECK        { get { fixed (byte* a = &data[offset+0x044]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x044])        (*(int*)a)=value; } }
-                int PART_LB_NECK        { get { fixed (byte* a = &data[offset+0x048]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x048])        (*(int*)a)=value; } }
-                int PART_RB_NECK        { get { fixed (byte* a = &data[offset+0x04C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x04C])        (*(int*)a)=value; } }
-                int PART_LF_CHEST       { get { fixed (byte* a = &data[offset+0x050]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x050])        (*(int*)a)=value; } }
-                int PART_RF_CHEST       { get { fixed (byte* a = &data[offset+0x054]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x054])        (*(int*)a)=value; } }
-                int PART_LB_CHEST       { get { fixed (byte* a = &data[offset+0x058]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x058])        (*(int*)a)=value; } }
-                int PART_RB_CHEST       { get { fixed (byte* a = &data[offset+0x05C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x05C])        (*(int*)a)=value; } }
-                int PART_LF_HIP         { get { fixed (byte* a = &data[offset+0x060]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x060])        (*(int*)a)=value; } }
-                int PART_RF_HIP         { get { fixed (byte* a = &data[offset+0x064]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x064])        (*(int*)a)=value; } }
-                int PART_LB_HIP         { get { fixed (byte* a = &data[offset+0x068]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x068])        (*(int*)a)=value; } }
-                int PART_RB_HIP         { get { fixed (byte* a = &data[offset+0x06C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x06C])        (*(int*)a)=value; } }
-                int PART_LF_COLLAR      { get { fixed (byte* a = &data[offset+0x070]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x070])        (*(int*)a)=value; } }
-                int PART_RF_COLLAR      { get { fixed (byte* a = &data[offset+0x074]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x074])        (*(int*)a)=value; } }
-                int PART_LB_COLLAR      { get { fixed (byte* a = &data[offset+0x078]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x078])        (*(int*)a)=value; } }
-                int PART_RB_COLLAR      { get { fixed (byte* a = &data[offset+0x07C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x07C])        (*(int*)a)=value; } }
-                int PART_LF_UPARM       { get { fixed (byte* a = &data[offset+0x080]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x080])        (*(int*)a)=value; } }
-                int PART_RF_UPARM       { get { fixed (byte* a = &data[offset+0x084]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x084])        (*(int*)a)=value; } }
-                int PART_LB_UPARM       { get { fixed (byte* a = &data[offset+0x088]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x088])        (*(int*)a)=value; } }
-                int PART_RB_UPARM       { get { fixed (byte* a = &data[offset+0x08C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x08C])        (*(int*)a)=value; } }
-                int PART_LF_FOARM       { get { fixed (byte* a = &data[offset+0x090]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x090])        (*(int*)a)=value; } }
-                int PART_RF_FOARM       { get { fixed (byte* a = &data[offset+0x094]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x094])        (*(int*)a)=value; } }
-                int PART_LB_FOARM       { get { fixed (byte* a = &data[offset+0x098]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x098])        (*(int*)a)=value; } }
-                int PART_RB_FOARM       { get { fixed (byte* a = &data[offset+0x09C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x09C])        (*(int*)a)=value; } }
-                int PART_LF_HAND        { get { fixed (byte* a = &data[offset+0x0A0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0A0])        (*(int*)a)=value; } }
-                int PART_RF_HAND        { get { fixed (byte* a = &data[offset+0x0A4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0A4])        (*(int*)a)=value; } }
-                int PART_LB_HAND        { get { fixed (byte* a = &data[offset+0x0A8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0A8])        (*(int*)a)=value; } }
-                int PART_RB_HAND        { get { fixed (byte* a = &data[offset+0x0AC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0AC])        (*(int*)a)=value; } }
-                int PART_LF_FEMUR       { get { fixed (byte* a = &data[offset+0x0B0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0B0])        (*(int*)a)=value; } }
-                int PART_RF_FEMUR       { get { fixed (byte* a = &data[offset+0x0B4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0B4])        (*(int*)a)=value; } }
-                int PART_LB_FEMUR       { get { fixed (byte* a = &data[offset+0x0B8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0B8])        (*(int*)a)=value; } }
-                int PART_RB_FEMUR       { get { fixed (byte* a = &data[offset+0x0BC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0BC])        (*(int*)a)=value; } }
-                int PART_LF_TIBIA       { get { fixed (byte* a = &data[offset+0x0C0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0C0])        (*(int*)a)=value; } }
-                int PART_RF_TIBIA       { get { fixed (byte* a = &data[offset+0x0C4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0C4])        (*(int*)a)=value; } }
-                int PART_LB_TIBIA       { get { fixed (byte* a = &data[offset+0x0C8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0C8])        (*(int*)a)=value; } }
-                int PART_RB_TIBIA       { get { fixed (byte* a = &data[offset+0x0CC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0CC])        (*(int*)a)=value; } }
-                int PART_LF_FOOT        { get { fixed (byte* a = &data[offset+0x0D0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0D0])        (*(int*)a)=value; } }
-                int PART_RF_FOOT        { get { fixed (byte* a = &data[offset+0x0D4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0D4])        (*(int*)a)=value; } }
-                int PART_LB_FOOT        { get { fixed (byte* a = &data[offset+0x0D8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0D8])        (*(int*)a)=value; } }
-                int PART_RB_FOOT        { get { fixed (byte* a = &data[offset+0x0DC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0DC])        (*(int*)a)=value; } }
-                int PART_LF_TOES        { get { fixed (byte* a = &data[offset+0x0E0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0E0])        (*(int*)a)=value; } }
-                int PART_RF_TOES        { get { fixed (byte* a = &data[offset+0x0E4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0E4])        (*(int*)a)=value; } }
-                int PART_LB_TOES        { get { fixed (byte* a = &data[offset+0x0E8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0E8])        (*(int*)a)=value; } }
-                int PART_RB_TOES        { get { fixed (byte* a = &data[offset+0x0EC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0EC])        (*(int*)a)=value; } }
-                int PART_WEAPON_L_LINK  { get { fixed (byte* a = &data[offset+0x0F0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0F0])        (*(int*)a)=value; } }
-                int PART_WEAPON_L       { get { fixed (byte* a = &data[offset+0x0F4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0F4])        (*(int*)a)=value; } }
-                int PART_WEAPON_R_LINK  { get { fixed (byte* a = &data[offset+0x0F8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0F8])        (*(int*)a)=value; } }
-                int PART_WEAPON_R       { get { fixed (byte* a = &data[offset+0x0FC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0FC])        (*(int*)a)=value; } }
-                int PART_SPECIAL0       { get { fixed (byte* a = &data[offset+0x100]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x100])        (*(int*)a)=value; } }
-                int PART_SPECIAL1       { get { fixed (byte* a = &data[offset+0x104]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x104])        (*(int*)a)=value; } }
-                int PART_SPECIAL2       { get { fixed (byte* a = &data[offset+0x108]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x108])        (*(int*)a)=value; } }
-                int PART_SPECIAL3       { get { fixed (byte* a = &data[offset+0x10C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x10C])        (*(int*)a)=value; } }
+                public int PART_LF_HEAD        { get { fixed (byte* a = &data[offset+0x030]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x030])        (*(int*)a)=value; } }
+                public int PART_RF_HEAD        { get { fixed (byte* a = &data[offset+0x034]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x034])        (*(int*)a)=value; } }
+                public int PART_LB_HEAD        { get { fixed (byte* a = &data[offset+0x038]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x038])        (*(int*)a)=value; } }
+                public int PART_RB_HEAD        { get { fixed (byte* a = &data[offset+0x03C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x03C])        (*(int*)a)=value; } }
+                public int PART_LF_NECK        { get { fixed (byte* a = &data[offset+0x040]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x040])        (*(int*)a)=value; } }
+                public int PART_RF_NECK        { get { fixed (byte* a = &data[offset+0x044]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x044])        (*(int*)a)=value; } }
+                public int PART_LB_NECK        { get { fixed (byte* a = &data[offset+0x048]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x048])        (*(int*)a)=value; } }
+                public int PART_RB_NECK        { get { fixed (byte* a = &data[offset+0x04C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x04C])        (*(int*)a)=value; } }
+                public int PART_LF_CHEST       { get { fixed (byte* a = &data[offset+0x050]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x050])        (*(int*)a)=value; } }
+                public int PART_RF_CHEST       { get { fixed (byte* a = &data[offset+0x054]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x054])        (*(int*)a)=value; } }
+                public int PART_LB_CHEST       { get { fixed (byte* a = &data[offset+0x058]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x058])        (*(int*)a)=value; } }
+                public int PART_RB_CHEST       { get { fixed (byte* a = &data[offset+0x05C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x05C])        (*(int*)a)=value; } }
+                public int PART_LF_HIP         { get { fixed (byte* a = &data[offset+0x060]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x060])        (*(int*)a)=value; } }
+                public int PART_RF_HIP         { get { fixed (byte* a = &data[offset+0x064]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x064])        (*(int*)a)=value; } }
+                public int PART_LB_HIP         { get { fixed (byte* a = &data[offset+0x068]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x068])        (*(int*)a)=value; } }
+                public int PART_RB_HIP         { get { fixed (byte* a = &data[offset+0x06C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x06C])        (*(int*)a)=value; } }
+                public int PART_LF_COLLAR      { get { fixed (byte* a = &data[offset+0x070]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x070])        (*(int*)a)=value; } }
+                public int PART_RF_COLLAR      { get { fixed (byte* a = &data[offset+0x074]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x074])        (*(int*)a)=value; } }
+                public int PART_LB_COLLAR      { get { fixed (byte* a = &data[offset+0x078]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x078])        (*(int*)a)=value; } }
+                public int PART_RB_COLLAR      { get { fixed (byte* a = &data[offset+0x07C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x07C])        (*(int*)a)=value; } }
+                public int PART_LF_UPARM       { get { fixed (byte* a = &data[offset+0x080]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x080])        (*(int*)a)=value; } }
+                public int PART_RF_UPARM       { get { fixed (byte* a = &data[offset+0x084]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x084])        (*(int*)a)=value; } }
+                public int PART_LB_UPARM       { get { fixed (byte* a = &data[offset+0x088]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x088])        (*(int*)a)=value; } }
+                public int PART_RB_UPARM       { get { fixed (byte* a = &data[offset+0x08C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x08C])        (*(int*)a)=value; } }
+                public int PART_LF_FOARM       { get { fixed (byte* a = &data[offset+0x090]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x090])        (*(int*)a)=value; } }
+                public int PART_RF_FOARM       { get { fixed (byte* a = &data[offset+0x094]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x094])        (*(int*)a)=value; } }
+                public int PART_LB_FOARM       { get { fixed (byte* a = &data[offset+0x098]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x098])        (*(int*)a)=value; } }
+                public int PART_RB_FOARM       { get { fixed (byte* a = &data[offset+0x09C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x09C])        (*(int*)a)=value; } }
+                public int PART_LF_HAND        { get { fixed (byte* a = &data[offset+0x0A0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0A0])        (*(int*)a)=value; } }
+                public int PART_RF_HAND        { get { fixed (byte* a = &data[offset+0x0A4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0A4])        (*(int*)a)=value; } }
+                public int PART_LB_HAND        { get { fixed (byte* a = &data[offset+0x0A8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0A8])        (*(int*)a)=value; } }
+                public int PART_RB_HAND        { get { fixed (byte* a = &data[offset+0x0AC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0AC])        (*(int*)a)=value; } }
+                public int PART_LF_FEMUR       { get { fixed (byte* a = &data[offset+0x0B0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0B0])        (*(int*)a)=value; } }
+                public int PART_RF_FEMUR       { get { fixed (byte* a = &data[offset+0x0B4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0B4])        (*(int*)a)=value; } }
+                public int PART_LB_FEMUR       { get { fixed (byte* a = &data[offset+0x0B8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0B8])        (*(int*)a)=value; } }
+                public int PART_RB_FEMUR       { get { fixed (byte* a = &data[offset+0x0BC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0BC])        (*(int*)a)=value; } }
+                public int PART_LF_TIBIA       { get { fixed (byte* a = &data[offset+0x0C0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0C0])        (*(int*)a)=value; } }
+                public int PART_RF_TIBIA       { get { fixed (byte* a = &data[offset+0x0C4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0C4])        (*(int*)a)=value; } }
+                public int PART_LB_TIBIA       { get { fixed (byte* a = &data[offset+0x0C8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0C8])        (*(int*)a)=value; } }
+                public int PART_RB_TIBIA       { get { fixed (byte* a = &data[offset+0x0CC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0CC])        (*(int*)a)=value; } }
+                public int PART_LF_FOOT        { get { fixed (byte* a = &data[offset+0x0D0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0D0])        (*(int*)a)=value; } }
+                public int PART_RF_FOOT        { get { fixed (byte* a = &data[offset+0x0D4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0D4])        (*(int*)a)=value; } }
+                public int PART_LB_FOOT        { get { fixed (byte* a = &data[offset+0x0D8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0D8])        (*(int*)a)=value; } }
+                public int PART_RB_FOOT        { get { fixed (byte* a = &data[offset+0x0DC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0DC])        (*(int*)a)=value; } }
+                public int PART_LF_TOES        { get { fixed (byte* a = &data[offset+0x0E0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0E0])        (*(int*)a)=value; } }
+                public int PART_RF_TOES        { get { fixed (byte* a = &data[offset+0x0E4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0E4])        (*(int*)a)=value; } }
+                public int PART_LB_TOES        { get { fixed (byte* a = &data[offset+0x0E8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0E8])        (*(int*)a)=value; } }
+                public int PART_RB_TOES        { get { fixed (byte* a = &data[offset+0x0EC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0EC])        (*(int*)a)=value; } }
+                public int PART_WEAPON_L_LINK  { get { fixed (byte* a = &data[offset+0x0F0]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0F0])        (*(int*)a)=value; } }
+                public int PART_WEAPON_L       { get { fixed (byte* a = &data[offset+0x0F4]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0F4])        (*(int*)a)=value; } }
+                public int PART_WEAPON_R_LINK  { get { fixed (byte* a = &data[offset+0x0F8]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0F8])        (*(int*)a)=value; } }
+                public int PART_WEAPON_R       { get { fixed (byte* a = &data[offset+0x0FC]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x0FC])        (*(int*)a)=value; } }
+                public int PART_SPECIAL0       { get { fixed (byte* a = &data[offset+0x100]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x100])        (*(int*)a)=value; } }
+                public int PART_SPECIAL1       { get { fixed (byte* a = &data[offset+0x104]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x104])        (*(int*)a)=value; } }
+                public int PART_SPECIAL2       { get { fixed (byte* a = &data[offset+0x108]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x108])        (*(int*)a)=value; } }
+                public int PART_SPECIAL3       { get { fixed (byte* a = &data[offset+0x10C]) return (*(int*)a); } set { fixed (byte* a = &data[offset+0x10C])        (*(int*)a)=value; } }
             
                 public Vector4 distanceFromSkeleton { get { fixed (byte* a = &data[offset+0x110]) return new Vector4((*(float*)(a + 0 * sizeof(float))), (*(float*)(a + 1 * sizeof(float))), (*(float*)(a + 2 * sizeof(float))), (*(float*)(a + 3 * sizeof(float)))); } set { fixed (byte* a = &data[offset+0x110]) { (*(float*)(a + 0 * sizeof(float))) = value.X; (*(float*)(a + 1 * sizeof(float))) = value.Y; (*(float*)(a + 2 * sizeof(float))) = value.Z; (*(float*)(a + 3 * sizeof(float))) = value.W; } }}
             
@@ -664,13 +671,161 @@ public static byte[] Data_ptr = new byte[0x1030];
                 this.Models = new List<KH2Model>();
             }
 
+            public Skeleton GetSkeleton(bool nameBonesIfPossible)
+            {
+                Skeleton skeleton = new Skeleton();
+
+                if (this.Skeleton != null && this.Skeleton.Length > 0)
+                {
+                    for (int i=0;i<this.Skeleton.Length;i++)
+                    {
+                        SKLHRC hrc = this.Skeleton[i];
+                        Bone bone = new Bone("bone"+i.ToString("d3"));
+                        bone.Index = hrc.index;
+                        bone.Transform = Matrix4.CreateScale(hrc.scale.Xyz) * 
+                            Matrix4.CreateRotationX(hrc.rot.X) * 
+                            Matrix4.CreateRotationY(hrc.rot.Y) * 
+                            Matrix4.CreateRotationZ(hrc.rot.Z) * 
+                            Matrix4.CreateTranslation(hrc.trans.Xyz);
+
+                        skeleton.Bones.Add(bone);
+                    }
+                    for (int i=0;i<this.Skeleton.Length;i++)
+                    {
+                        SKLHRC hrc = this.Skeleton[i];
+                        if (hrc.parent_id > -1)
+                        {
+                            skeleton.Bones[i].Parent = skeleton.Bones[hrc.parent_id];
+                            skeleton.Bones[hrc.parent_id].Children.Add(skeleton.Bones[i]);
+                        }
+                    }
+
+                    if (nameBonesIfPossible)
+                    {              
+                        if (this.BoneInfo.PART_LF_HEAD > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_HEAD].Name = "PART_LF_HEAD";
+                        if (this.BoneInfo.PART_RF_HEAD > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_HEAD].Name = "PART_RF_HEAD";
+                        if (this.BoneInfo.PART_LB_HEAD > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_HEAD].Name = "PART_LB_HEAD";
+                        if (this.BoneInfo.PART_RB_HEAD > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_HEAD].Name = "PART_RB_HEAD";
+                        if (this.BoneInfo.PART_LF_NECK > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_NECK].Name = "PART_LF_NECK";
+                        if (this.BoneInfo.PART_RF_NECK > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_NECK].Name = "PART_RF_NECK";
+                        if (this.BoneInfo.PART_LB_NECK > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_NECK].Name = "PART_LB_NECK";
+                        if (this.BoneInfo.PART_RB_NECK > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_NECK].Name = "PART_RB_NECK";
+                        if (this.BoneInfo.PART_LF_CHEST > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_CHEST].Name = "PART_LF_CHEST";
+                        if (this.BoneInfo.PART_RF_CHEST > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_CHEST].Name = "PART_RF_CHEST";
+                        if (this.BoneInfo.PART_LB_CHEST > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_CHEST].Name = "PART_LB_CHEST";
+                        if (this.BoneInfo.PART_RB_CHEST > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_CHEST].Name = "PART_RB_CHEST";
+                        if (this.BoneInfo.PART_LF_HIP > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_HIP].Name = "PART_LF_HIP";
+                        if (this.BoneInfo.PART_RF_HIP > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_HIP].Name = "PART_RF_HIP";
+                        if (this.BoneInfo.PART_LB_HIP > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_HIP].Name = "PART_LB_HIP";
+                        if (this.BoneInfo.PART_RB_HIP > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_HIP].Name = "PART_RB_HIP";
+                        if (this.BoneInfo.PART_LF_COLLAR > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_COLLAR].Name = "PART_LF_COLLAR";
+                        if (this.BoneInfo.PART_RF_COLLAR > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_COLLAR].Name = "PART_RF_COLLAR";
+                        if (this.BoneInfo.PART_LB_COLLAR > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_COLLAR].Name = "PART_LB_COLLAR";
+                        if (this.BoneInfo.PART_RB_COLLAR > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_COLLAR].Name = "PART_RB_COLLAR";
+                        if (this.BoneInfo.PART_LF_UPARM > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_UPARM].Name = "PART_LF_UPARM";
+                        if (this.BoneInfo.PART_RF_UPARM > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_UPARM].Name = "PART_RF_UPARM";
+                        if (this.BoneInfo.PART_LB_UPARM > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_UPARM].Name = "PART_LB_UPARM";
+                        if (this.BoneInfo.PART_RB_UPARM > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_UPARM].Name = "PART_RB_UPARM";
+                        if (this.BoneInfo.PART_LF_FOARM > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_FOARM].Name = "PART_LF_FOARM";
+                        if (this.BoneInfo.PART_RF_FOARM > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_FOARM].Name = "PART_RF_FOARM";
+                        if (this.BoneInfo.PART_LB_FOARM > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_FOARM].Name = "PART_LB_FOARM";
+                        if (this.BoneInfo.PART_RB_FOARM > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_FOARM].Name = "PART_RB_FOARM";
+                        if (this.BoneInfo.PART_LF_HAND > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_HAND].Name = "PART_LF_HAND";
+                        if (this.BoneInfo.PART_RF_HAND > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_HAND].Name = "PART_RF_HAND";
+                        if (this.BoneInfo.PART_LB_HAND > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_HAND].Name = "PART_LB_HAND";
+                        if (this.BoneInfo.PART_RB_HAND > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_HAND].Name = "PART_RB_HAND";
+                        if (this.BoneInfo.PART_LF_FEMUR > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_FEMUR].Name = "PART_LF_FEMUR";
+                        if (this.BoneInfo.PART_RF_FEMUR > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_FEMUR].Name = "PART_RF_FEMUR";
+                        if (this.BoneInfo.PART_LB_FEMUR > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_FEMUR].Name = "PART_LB_FEMUR";
+                        if (this.BoneInfo.PART_RB_FEMUR > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_FEMUR].Name = "PART_RB_FEMUR";
+                        if (this.BoneInfo.PART_LF_TIBIA > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_TIBIA].Name = "PART_LF_TIBIA";
+                        if (this.BoneInfo.PART_RF_TIBIA > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_TIBIA].Name = "PART_RF_TIBIA";
+                        if (this.BoneInfo.PART_LB_TIBIA > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_TIBIA].Name = "PART_LB_TIBIA";
+                        if (this.BoneInfo.PART_RB_TIBIA > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_TIBIA].Name = "PART_RB_TIBIA";
+                        if (this.BoneInfo.PART_LF_FOOT > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_FOOT].Name = "PART_LF_FOOT";
+                        if (this.BoneInfo.PART_RF_FOOT > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_FOOT].Name = "PART_RF_FOOT";
+                        if (this.BoneInfo.PART_LB_FOOT > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_FOOT].Name = "PART_LB_FOOT";
+                        if (this.BoneInfo.PART_RB_FOOT > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_FOOT].Name = "PART_RB_FOOT";
+                        if (this.BoneInfo.PART_LF_TOES > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LF_TOES].Name = "PART_LF_TOES";
+                        if (this.BoneInfo.PART_RF_TOES > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RF_TOES].Name = "PART_RF_TOES";
+                        if (this.BoneInfo.PART_LB_TOES > -1)
+                            skeleton.Bones[this.BoneInfo.PART_LB_TOES].Name = "PART_LB_TOES";
+                        if (this.BoneInfo.PART_RB_TOES > -1)
+                            skeleton.Bones[this.BoneInfo.PART_RB_TOES].Name = "PART_RB_TOES";
+                        if (this.BoneInfo.PART_WEAPON_L_LINK > -1)
+                            skeleton.Bones[this.BoneInfo.PART_WEAPON_L_LINK].Name = "PART_WEAPON_L_LINK";
+                        if (this.BoneInfo.PART_WEAPON_L > -1)
+                            skeleton.Bones[this.BoneInfo.PART_WEAPON_L].Name = "PART_WEAPON_L";
+                        if (this.BoneInfo.PART_WEAPON_R_LINK > -1)
+                            skeleton.Bones[this.BoneInfo.PART_WEAPON_R_LINK].Name = "PART_WEAPON_R_LINK";
+                        if (this.BoneInfo.PART_WEAPON_R > -1)
+                            skeleton.Bones[this.BoneInfo.PART_WEAPON_R].Name = "PART_WEAPON_R";
+                        if (this.BoneInfo.PART_SPECIAL0 > -1)
+                            skeleton.Bones[this.BoneInfo.PART_SPECIAL0].Name = "PART_SPECIAL0";
+                        if (this.BoneInfo.PART_SPECIAL1 > -1)
+                            skeleton.Bones[this.BoneInfo.PART_SPECIAL1].Name = "PART_SPECIAL1";
+                        if (this.BoneInfo.PART_SPECIAL2 > -1)
+                            skeleton.Bones[this.BoneInfo.PART_SPECIAL2].Name = "PART_SPECIAL2";
+                        if (this.BoneInfo.PART_SPECIAL3 > -1)
+                            skeleton.Bones[this.BoneInfo.PART_SPECIAL3].Name = "PART_SPECIAL3";
+                    }
+                }
+                return skeleton;
+            }
+
             public KH2Model(BAR inputFile):this()
             {
                 this.Name = inputFile.Entry.Name;
                 var timsCollection = inputFile.NamePairs.GetAllOfType(7);
                 if (timsCollection.Count > 0)
                     this.TIM = new TIM2(timsCollection[0].Data);
-                
+               
                 var data = inputFile.Data;
                 if (data.Length < 0xA0) return;
 
@@ -774,7 +929,8 @@ public static byte[] Data_ptr = new byte[0x1030];
                 foreach (objectModelPartEntry entry in objectModelParts)
                 {
                     Part mesh = new Part();
-                    mesh.TextureIndex = entry.textureIndex;
+                    if (this.Type != MODEL_TYPE.SHADOW)
+                        mesh.TextureIndex = entry.textureIndex;
                     sourceChainDmaTag transferTag = new sourceChainDmaTag(); 
                     for (int i=0;i<entry.totalQwc;i++)
                     {
@@ -940,6 +1096,176 @@ Array.Copy(BC.GetBytes(cursor), 0, VUMemory.Data_ptr, vu_cursor,sizeof(int));
             {
                 this.Models.Add(new KH2Model(kh2modelEntry));
             }
+        }
+        
+        public Assimp.Scene GetAssimpScene(string outputDirectoryForTextures, bool keepKH2AlphaSystem)
+        {
+            Assimp.Scene scene = new Assimp.Scene();
+            scene.RootNode = new Assimp.Node("Root");
+            
+            List<string> modelNames = new List<string>(0);
+
+            for (int h = 0; h < this.Models.Count; h++)
+            {
+                KH2Model currKH2Model = this.Models[h];
+
+                string modelName = currKH2Model.Name.TrimEnd('\x0');
+                for (int i=0;i<int.MaxValue;i++)
+                {
+                    string testName = modelName+"_"+i.ToString("d3");
+                    if (modelNames.Contains(testName) == false)
+                    {
+                        modelName = testName;
+                        break;
+                    }
+                }
+                modelNames.Add(modelName);
+                
+                Directory.CreateDirectory(outputDirectoryForTextures+@"\"+modelName);
+
+                var colorMatrix = new ColorMatrix();
+                colorMatrix.Matrix33 = 2f;
+                var imageAttributes = new ImageAttributes();
+                imageAttributes.SetColorMatrix(colorMatrix,ColorMatrixFlag.Default,ColorAdjustType.Bitmap);
+
+                
+                int materialCount = scene.Materials.Count;
+                for (int i=0;i<currKH2Model.Textures.Count;i++)
+                {
+                    Assimp.TextureSlot texture = new Assimp.TextureSlot();
+                    texture.TextureType = Assimp.TextureType.Diffuse;
+                    texture.FilePath = modelName+"/texture" + i.ToString("d3") + "." + System.Drawing.Imaging.ImageFormat.Png.ToString().ToLower();
+                    Bitmap bmp = currKH2Model.Textures[i].Image;
+                    if (keepKH2AlphaSystem == false)
+                    {
+                        Bitmap newBmp = new Bitmap(bmp.Width, bmp.Height);
+                        Graphics gr = Graphics.FromImage(newBmp);
+                        gr.DrawImage(bmp, new Rectangle(Point.Empty, bmp.Size),0,0,bmp.Width, bmp.Height,GraphicsUnit.Pixel,imageAttributes);
+                        bmp = newBmp;
+                    }
+                    bmp.Save(outputDirectoryForTextures+@"\"+texture.FilePath);
+                    
+                    Assimp.Material material = new Assimp.Material();
+                    material.Name = modelName+"-material" + i.ToString("d3");
+                    material.TextureDiffuse = texture;
+                    
+                    scene.Materials.Add(material);
+                }
+
+                var skeleton = currKH2Model.GetSkeleton(true);
+
+                for (int i=0;i<currKH2Model.Meshes.Count;i++)
+                {
+                    var part = currKH2Model.Meshes[i];
+                    Assimp.Mesh mesh = new Assimp.Mesh(modelName+"-mesh" + i.ToString("d3"), Assimp.PrimitiveType.Triangle);
+                    mesh.UVComponentCount[0] = 2;
+                    mesh.MaterialIndex = materialCount + part.TextureIndex;
+                    
+                    for (int b=0;b<skeleton.Bones.Count;b++)
+                    {
+                        var bone = new Assimp.Bone(modelName+"-"+skeleton.Bones[b].Name, Matrix3x3.Identity, new Assimp.VertexWeight[0]);
+                        mesh.Bones.Add(bone);
+                    }
+
+                    bool hasTextCoords = part.TextureCoordinates.Count > 0;
+                    bool hasColors = part.Colors.Count > 0;
+
+                    List<Vector2> texcoords = new List<Vector2>(0);
+                    List<Color4D> colors = new List<Color4D>(0);
+                    
+                    for (int j=0;j<part.Vertices.Count;j++)
+                    {
+                        if (hasTextCoords)
+                        texcoords.Add(new Vector2(Single.NaN,Single.NaN));
+                        if (hasColors)
+                        colors.Add(new Color4D(Single.NaN,Single.NaN,Single.NaN,Single.NaN));
+                    }
+                        
+                    for (int j=0;j<part.Indices.Count;j++)
+                    {
+                        int index = part.Indices[j];
+                        if (hasTextCoords && Single.IsNaN(texcoords[index].X))
+                        {
+                            texcoords[index] = part.TextureCoordinates[j];
+                        }
+                        if (hasColors && Single.IsNaN(colors[index].R))
+                        {
+                            colors[index] = new Color4D(part.Colors[j].R/128f,part.Colors[j].G/128f,part.Colors[j].B/128f,part.Colors[j].A/128f);
+                        }
+                    }
+                    for (int j=0;j<part.Indices.Count;j++)
+                    {
+                        int index = part.Indices[j];
+                        var vertex = part.Vertices[index];
+                        var texcoord = Vector2.Zero;
+                        if (hasTextCoords)
+                            texcoord = part.TextureCoordinates[j];
+                        var color = new Color4D();
+                        if (hasColors)
+                            color = new Color4D(part.Colors[j].R/128f,part.Colors[j].G/128f,part.Colors[j].B/128f,part.Colors[j].A/128f);
+
+                        if ((hasTextCoords && Vector2.Distance(texcoords[index], texcoord) > 0.01 )||
+                            (hasColors && Color4D.Equals(colors[index], color) == false))
+                        {
+                            part.Indices[j] = part.Vertices.Count;
+                            part.Vertices.Add(vertex);
+
+                            if (hasTextCoords) texcoords.Add(texcoord);
+                            if (hasColors) colors.Add(color);
+                        }
+                    }
+
+                    for (int j=0;j<part.Vertices.Count;j++)
+                    {
+                        var vertex = part.Vertices[j];
+
+                        mesh.Vertices.Add(new Assimp.Vector3D(vertex.WorldPosition.X, vertex.WorldPosition.Y, vertex.WorldPosition.Z));
+                        
+                        if (hasTextCoords)
+                            mesh.TextureCoordinateChannels[0].Add(new Assimp.Vector3D(texcoords[j].X,1f-texcoords[j].Y, 0));
+                        if (hasColors)
+                            mesh.VertexColorChannels[0].Add(colors[j]);
+
+                        if (vertex.Influences != null)
+                        foreach (var influence in vertex.Influences)
+                        {
+                            mesh.Bones[influence.Index].VertexWeights.Add(new Assimp.VertexWeight(j, influence.Weight));
+                        }
+                    }
+                    mesh.SetIndices(part.Indices.ToArray(), 3);
+
+                    Assimp.Node meshNode = new Assimp.Node(modelName+"-mesh" + i.ToString("d3")+"-Node");
+                    meshNode.MeshIndices.Add(scene.Meshes.Count);
+                    
+                    scene.Meshes.Add(mesh);
+                    scene.RootNode.Children.Add(meshNode);
+                }
+
+                foreach (var bone in skeleton.Bones)
+                {
+                    string boneName = bone.Name;
+                    Assimp.Node boneNode = new Assimp.Node(modelName+"-"+boneName);
+                    boneNode.Transform = Matrix4Helpers.ToAssimp(bone.Transform);
+
+                    if (bone.Parent == null)
+                        scene.RootNode.Children.Add(boneNode);
+                    else
+                        scene.RootNode.FindNode(modelName+"-"+bone.Parent.Name).Children.Add(boneNode);
+                }
+
+                skeleton.ComputeMatrices(false);
+
+                foreach (Assimp.Mesh mesh in scene.Meshes)
+                {
+                    for (int i=0;i<mesh.Bones.Count;i++)
+                    {
+                        mesh.Bones[i].OffsetMatrix = Matrix4Helpers.ToAssimp(Matrix4.Invert(skeleton.Bones[i].Transform));
+                    }
+                }
+                
+            }
+            
+            return scene;
         }
     }
 }
